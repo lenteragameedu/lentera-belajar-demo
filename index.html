@@ -1515,7 +1515,7 @@ window.home=function(){
     cards.forEach(function(c){var oc=c.getAttribute('onclick')||'';
       if(LOCKED.indexOf(oc)>-1){c.classList.add('dm-locked');c.insertAdjacentHTML('afterbegin','<span class="dm-lock">\uD83D\uDD12</span>');var nm=(c.querySelector('b')||{}).textContent||'';c.setAttribute('onclick','lenteraDemoUpsell('+JSON.stringify(nm)+')');locked.push(c);}else open.push(c);});
     open.concat(locked).forEach(function(c){wrap.appendChild(c);});
-    if(!document.querySelector('.dm-note'))wrap.insertAdjacentHTML('beforebegin','<div class="dm-note">\uD83C\uDF81 '+L('Coba gratis 4 game: Tebak-tebakan Doa, Petualangan Angka Arab, Belajar Warna, dan Cocokkan Bayangan. Game bertanda \uD83D\uDD12 ada di versi lengkap.','Try 4 games free. Games marked \uD83D\uDD12 are in the full version.','\u062C\u0631\u0651\u0628 \u0664 \u0623\u0644\u0639\u0627\u0628 \u0645\u062C\u0627\u0646\u0627\u064B. \u0627\u0644\u0623\u0644\u0639\u0627\u0628 \u0627\u0644\u0645\u0639\u0644\u0651\u0645\u0629 \u0628\u0640 \uD83D\uDD12 \u0641\u064A \u0627\u0644\u0646\u0633\u062E\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629.')+'</div>');
+    if(!document.querySelector('.dm-note'))wrap.insertAdjacentHTML('beforebegin','<div class="dm-note">\uD83C\uDF81 '+L('Coba gratis 4 game, masing-masing 2 soal: Tebak-tebakan Doa, Petualangan Angka Arab, Belajar Warna, dan Cocokkan Bayangan. Game bertanda \uD83D\uDD12 ada di versi lengkap.','Try 4 games free, 2 questions each. Games marked \uD83D\uDD12 are in the full version.','\u062C\u0631\u0651\u0628 \u0664 \u0623\u0644\u0639\u0627\u0628 \u0645\u062C\u0627\u0646\u0627\u064B\u060C \u0633\u0624\u0627\u0644\u0627\u0646 \u0644\u0643\u0644 \u0644\u0639\u0628\u0629. \u0627\u0644\u0623\u0644\u0639\u0627\u0628 \u0627\u0644\u0645\u0639\u0644\u0651\u0645\u0629 \u0628\u0640 \uD83D\uDD12 \u0641\u064A \u0627\u0644\u0646\u0633\u062E\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629.')+'</div>');
   }catch(e){}
 };
 var bar=document.createElement('div');bar.id='dm-bar';
@@ -1523,6 +1523,25 @@ function paintBar(){bar.dir=(function(){try{return LANG==='ar'?'rtl':'ltr';}catc
 paintBar();document.body.appendChild(bar);
 var h1=document.querySelector('.brand h1');if(h1)h1.insertAdjacentHTML('beforeend','<span class="dm-tag">DEMO</span>');
 var os=window.setAppLang;if(typeof os==='function')window.setAppLang=function(){os.apply(this,arguments);paintBar();};
+
+/* ---- batas isi demo: tiap game cuma 2 soal ---- */
+var oq=window.quizStart;
+if(typeof oq==='function')window.quizStart=function(cfg){try{cfg.n=Math.min(cfg.n,2);}catch(e){}return oq.call(this,cfg);};
+try{if(typeof SH_ROUNDS!=='undefined')SH_ROUNDS.splice(0,SH_ROUNDS.length,[0,1]);}catch(e){}
+var ocl=window.cgLearn;
+if(typeof ocl==='function')window.cgLearn=function(){
+  ocl.apply(this,arguments);
+  try{var g=document.querySelector('#app div[style*="grid-template-columns:1fr 1fr"]');
+    if(g){[].slice.call(g.children).forEach(function(c,i){if(i>=4)c.style.display='none';});
+      g.insertAdjacentHTML('afterend','<div class="dm-note" style="margin-top:12px;text-align:center">\uD83C\uDF81 '+L('Versi lengkap: semua 11 warna.','Full version: all 11 colors.','\u0627\u0644\u0646\u0633\u062E\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629: \u0643\u0644 \u0627\u0644\u0623\u0644\u0648\u0627\u0646 (\u0661\u0661).')+'</div>');}
+  }catch(e){}
+};
+window.lenteraDemoBuy=buy;
+function cta(){return '<div class="dm-note dm-cta" style="text-align:center">\uD83C\uDF81 '+L('Suka? Versi lengkap punya jauh lebih banyak soal dan 9 kelompok game.','Like it? The full version has many more questions and 9 groups of games.','\u0623\u0639\u062C\u0628\u062A\u0643\u061F \u0627\u0644\u0646\u0633\u062E\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629 \u0641\u064A\u0647\u0627 \u0623\u0633\u0626\u0644\u0629 \u0623\u0643\u062B\u0631 \u0628\u0643\u062B\u064A\u0631 \u0648\u0669 \u0645\u062C\u0645\u0648\u0639\u0627\u062A \u0623\u0644\u0639\u0627\u0628.')+'<br><button class="primary" style="margin-top:8px" onclick="lenteraDemoBuy()">'+L('Beli versi lengkap','Get the full version','\u0627\u062D\u0635\u0644 \u0639\u0644\u0649 \u0627\u0644\u0646\u0633\u062E\u0629 \u0627\u0644\u0643\u0627\u0645\u0644\u0629')+'</button></div>';}
+['quizDone','rewardScreen'].forEach(function(n){var o=window[n];
+  if(typeof o==='function')window[n]=function(){o.apply(this,arguments);
+    try{var app=document.querySelector('#app');if(!app||app.querySelector('.dm-cta'))return;var nav=app.querySelector('.nav');
+      if(nav)nav.insertAdjacentHTML('beforebegin',cta());else app.insertAdjacentHTML('beforeend',cta());}catch(e){}};});
 try{home();}catch(e){}
 })();
 </script>
